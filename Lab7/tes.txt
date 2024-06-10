@@ -1,0 +1,287 @@
+CREATE DATABASE dreamhouse;
+\c dreamhouse
+
+CREATE TABLE branch(
+branchNo VARCHAR(4),
+street VARCHAR(20),
+city VARCHAR(15),
+PRIMARY KEY(branchNo));
+INSERT INTO branch(BranchNo,street,city)VALUES('B005','22 Deer Rd','London');
+INSERT INTO branch(BranchNo,street,city)VALUES('B007','16 Argyll st','Aberdeen');
+INSERT INTO branch(BranchNo,street,city)VALUES('B003','163 Main st','Glasgow');
+INSERT INTO branch(BranchNo,street,city)VALUES('B004','32 Manse Rd','Bristol');
+INSERT INTO branch(BranchNo,street,city)VALUES('B002','56 Clover Dr','London');
+
+CREATE TABLE staff(
+staffNo VARCHAR(5),
+fName VARCHAR(10),
+lName VARCHAR(10),
+position VARCHAR(10),
+sex VARCHAR(1),
+DOB DATE,
+salary DECIMAL (10,2),
+PRIMARY KEY(staffNo));
+
+INSERT INTO staff(staffNo,fName,lName,position,sex,DOB,salary)VALUES('SL21','John','White','Manager','M','1-Oct-45','30000');
+INSERT INTO staff(staffNo,fName,lName,position,sex,DOB,salary)VALUES('SG37','Ann','Beech','Assistant','F','10-Nov-60','12000');
+INSERT INTO staff(staffNo,fName,lName,position,sex,DOB,salary)VALUES('SG14','David','Ford','Supervisor','M','24-Mar-59','18000');
+INSERT INTO staff(staffNo,fName,lName,position,sex,DOB,salary)VALUES('SA9','Marry','Howe','Assistant','F','19-Feb-70','9000');
+INSERT INTO staff(staffNo,fName,lName,position,sex,DOB,salary)VALUES('SG5','Susan','Brand','Manager','F','3-Jun-40','24000');
+INSERT INTO staff(staffNo,fName,lName,position,sex,DOB,salary)VALUES('SL41','Julie','Lee','Assistant','F','13-jun-65','9000');
+
+CREATE TABLE propertyForRent(
+PropertyNo VARCHAR(4),
+street VARCHAR(15),
+city VARCHAR(15),
+postcode VARCHAR(10),
+type VARCHAR(5),
+rooms INT,
+rent DECIMAL(6,2),
+PRIMARY KEY (PropertyNo,postcode));
+
+INSERT INTO PropertyForRent(PropertyNo,street,city,postcode,type,rooms,rent)VALUES('PA14','16 Holhead','Aberdeen','AB7 5Su','House','6','650');
+INSERT INTO PropertyForRent(PropertyNo,street,city,postcode,type,rooms,rent)VALUES('PL94','6 Argyll St','London','NW2','Flat','4','400');
+INSERT INTO PropertyForRent(PropertyNo,street,city,postcode,type,rooms,rent)VALUES('PG4','6 Lawrence St','Glasgow','G11 9QX','Flat','3','350');
+INSERT INTO PropertyForRent(PropertyNo,street,city,postcode,type,rooms,rent)VALUES('PG36','2 Manor Rd','Glasgow','G32 4QX','Flat','3','375');
+INSERT INTO PropertyForRent(PropertyNo,street,city,postcode,type,rooms,rent)VALUES('PG21','18 Dale Rd','Glasgow','G12','House','5','600');
+INSERT INTO PropertyForRent(PropertyNo,street,city,postcode,type,rooms,rent)VALUES('PG16','5 Novar Dr','Glasgow','G12 9AX','Flat','4','450');
+
+CREATE TABLE client(
+clientNo VARCHAR(4),
+fName VARCHAR(15),
+lname VARCHAR(15),
+telNo VARCHAR(15),
+prefType VARCHAR(5),
+maxRent INT,
+PRIMARY KEY (clientNo));
+
+INSERT INTO Client(clientNo,fName,lName,telNo,prefType,maxRent)VALUES('CR76','John','Kay','0207-774-5632','Flat','425');
+INSERT INTO Client(clientNo,fName,lName,telNo,prefType,maxRent)VALUES('CR56','Aline','Stewart','0141-848-1825','Flat','350');
+INSERT INTO Client(clientNo,fName,lName,telNo,prefType,maxRent)VALUES('CR74','Mike','Ritchie','01475-392178','House','750');
+INSERT INTO Client(clientNo,fName,lName,telNo,prefType,maxRent)VALUES('CR62','Mary','Tregear','01224-196720','Flat','600');
+
+CREATE TABLE privateOwner(
+OwnerNo VARCHAR(4),
+fName VARCHAR(15),
+lName VARCHAR(15),
+address VARCHAR(30),
+telNo VARCHAR(15),
+PRIMARY KEY (ownerno));
+
+INSERT INTO privateOwner(ownerNo,fName,lName,address,telNo)VALUES('CO46','Joe','Keogh','2 Fergus,Aberdeen AB2 7SX','01224-861212');
+INSERT INTO privateOwner(ownerNo,fName,lName,address,telNo)VALUES('CO87','Carol','Farrel','6 Archray St,Glassgow G42 9DX','0121-357-7419');
+INSERT INTO privateOwner(ownerNo,fName,lName,address,telNo)VALUES('CO40','Tina','Murphy','63 well St,Glassgow G42','0141-943-1728');
+INSERT INTO privateOwner(ownerNo,fName,lName,address,telNo)VALUES('CO93','Tony','Shaw','12 Park PI,Glasgow G4 0QR','0141-225-7025');
+
+CREATE TABLE viewing(
+viewDate DATE,
+comment VARCHAR(30));
+
+INSERT INTO viewing(viewDate,comment)VALUES('24-May-04','oo small');
+INSERT INTO viewing(viewDate,comment)VALUES('20-Apr-04','too remote');
+INSERT INTO viewing(viewDate)VALUES('26-May-04');
+INSERT INTO viewing(viewDate,comment)VALUES('14-May-04','no dinning room');
+INSERT INTO viewing(viewDate)VALUES('28-April-04');
+
+CREATE TABLE Registration(
+dateJoined DATE);
+
+INSERT INTO REGISTRATION(dateJoined)VALUES('2-Jan-04');
+INSERT INTO REGISTRATION(dateJoined)VALUES('11-April-03');
+INSERT INTO REGISTRATION(dateJoined)VALUES('16-Nov-02');
+INSERT INTO REGISTRATION(dateJoined)VALUES('7-Mar-03');
+
+ALTER TABLE branch
+ADD COLUMN postcode VARCHAR(10),
+ADD CONSTRAINT fkI
+FOREIGN KEY (postcode)
+REFERENCES propertyforrent(postcode);
+
+
+ALTER TABLE staff
+ADD COLUMN branchno VARCHAR(4),
+ADD CONSTRAINT fk
+FOREIGN KEY(branchno)
+REFERENCES branch(branchno);
+
+
+
+ALTER TABLE propertyforrent
+ADD COLUMN ownerno VARCHAR(4),
+ADD CONSTRAINT fk
+FOREIGN KEY(ownerno)
+REFERENCES privateowner(ownerno);
+
+
+ALTER TABLE propertyforrent
+ADD COLUMN staffno VARCHAR(4),
+ADD CONSTRAINT fk2
+FOREIGN KEY(staffno)
+REFERENCES staff(staffno);
+
+
+ALTER TABLE propertyforrent
+ADD COLUMN branchno VARCHAR(4),
+ADD CONSTRAINT fk3
+FOREIGN KEY(branchno)
+REFERENCES branch(branchno);
+
+ALTER TABLE VIEWING 
+ADD COLUMN clientno VARCHAR(4),
+ADD CONSTRAINT fk
+FOREIGN KEY (clientno)
+REFERENCES client(clientno);
+
+
+ALTER TABLE VIEWING 
+ADD COLUMN PropertyNo VARCHAR(4),
+ADD CONSTRAINT fk2
+FOREIGN KEY (PropertyNo)
+REFERENCES propertyForRent(PropertyNo);
+
+ALTER TABLE REGISTRATION
+ADD COLUMN clientNo VARCHAR(4),
+ADD CONSTRAINT fk
+FOREIGN KEY (clientNo)
+REFERENCES client(clientNo);
+
+
+ALTER TABLE REGISTRATION
+ADD COLUMN branchNo VARCHAR(4),
+ADD CONSTRAINT fk2
+FOREIGN KEY (branchNo)
+REFERENCES branch(branchNo);
+
+
+ALTER TABLE REGISTRATION
+ADD COLUMN staffNo VARCHAR(4),
+ADD CONSTRAINT fk3
+FOREIGN KEY (staffNo)
+REFERENCES staff(staffno);
+
+UPDATE staff
+SET BranchNo='B005' WHERE staffNo='SL21';
+UPDATE staff
+SET BranchNo='B003' WHERE staffNo='SG37';
+UPDATE staff
+SET BranchNo='B003' WHERE staffNo='SG14';
+UPDATE staff
+SET BranchNo='B007' WHERE staffNo='SA9';
+UPDATE staff
+SET BranchNo='B003' WHERE staffNo='SG5';
+UPDATE staff
+SET BranchNo='B005' WHERE staffNo='SL41';
+
+UPDATE propertyForRent
+SET ownerNo='CO46' WHERE PropertyNo='PA14';
+UPDATE propertyForRent
+SET ownerNo='CO87' WHERE PropertyNo='PL94';
+UPDATE propertyForRent
+SET ownerNo='CO40' WHERE PropertyNo='PG4';
+UPDATE propertyForRent
+SET ownerNo='CO93' WHERE PropertyNo='PG36';
+UPDATE propertyForRent
+SET ownerNo='CO87' WHERE PropertyNo='PG21';
+UPDATE propertyForRent
+SET ownerNo='CO93' WHERE PropertyNo='PG16';
+
+UPDATE propertyForRent
+SET staffNo='SA9' WHERE PropertyNo='PA14';
+UPDATE propertyForRent
+SET staffno='SL41' WHERE PropertyNo='PL94';
+UPDATE propertyForRent
+SET staffNo='SG37' WHERE PropertyNo='PG36';
+UPDATE propertyForRent
+SET staffNo='SG37' WHERE PropertyNo='PG21';
+UPDATE propertyForRent
+SET staffNo='SG14' WHERE PropertyNo='PG16';
+
+UPDATE propertyForRent
+SET branchNo='B007' WHERE PropertyNo='PA14';
+UPDATE propertyForRent
+SET branchNo='B005' WHERE PropertyNo='PL94';
+UPDATE propertyForRent
+SET branchNo='B003' WHERE PropertyNo='PG4';
+UPDATE propertyForRent
+SET branchNo='B003' WHERE PropertyNo='PG36';
+UPDATE propertyForRent
+SET branchNo='B003' WHERE PropertyNo='PG21';
+UPDATE propertyForRent
+SET branchNo='B003' WHERE PropertyNo='PG16';
+
+UPDATE viewing
+SET clientNo='CR56' WHERE viewDate='2004-05-24';
+UPDATE viewing
+SET clientNo='CR76' WHERE viewDate='2004-05-20';
+UPDATE viewing
+SET clientNo='CR56' WHERE viewDate='2004-05-26';
+UPDATE viewing
+SET clientNo='CR62' WHERE viewDate='2004-05-14';
+UPDATE viewing
+SET clientNo='CR56' WHERE viewDate='2004-05-28';
+
+UPDATE viewing
+SET PropertyNo='PA14' WHERE clientNo='CR56';
+UPDATE viewing
+SET PropertyNo='PG4' WHERE clientNo='CR76';
+UPDATE viewing
+SET PropertyNo='PG4' WHERE clientNo='CR56';
+UPDATE viewing
+SET PropertyNo='PA14' WHERE clientNo='CR62';
+UPDATE viewing
+SET PropertyNo='PG36' WHERE clientNo='CR56';
+
+UPDATE REGISTRATION
+SET clientNo='CR76' WHERE dateJoined='2-Jan-04';
+UPDATE REGISTRATION
+SET clientNo='CR56' WHERE dateJoined='11-Apr-03';
+UPDATE REGISTRATION
+SET clientNo='CR74' WHERE dateJoined='16-Nov-02';
+UPDATE REGISTRATION
+SET clientNo='CR62' WHERE dateJoined='7-Mar-03';
+
+
+UPDATE REGISTRATION
+SET branchNo='B003' WHERE dateJoined='2-Jan-04';
+UPDATE REGISTRATION
+SET branchNo='B003' WHERE dateJoined='11-Apr-03';
+UPDATE REGISTRATION
+SET branchNo='B003' WHERE dateJoined='16-Nov-02';
+UPDATE REGISTRATION
+SET branchNo='B007' WHERE dateJoined='7-Mar-03';
+
+
+UPDATE REGISTRATION
+SET staffNo='SL41' WHERE dateJoined='2-Jan-04';
+UPDATE REGISTRATION
+SET staffNo='SG37' WHERE dateJoined='11-Apr-03';
+UPDATE REGISTRATION
+SET staffNo='SG37' WHERE dateJoined='16-Nov-02';
+UPDATE REGISTRATION
+SET staffNo='SA9' WHERE dateJoined='7-Mar-03';
+
+CREATE VIEW HouseManagers AS
+SELECT s.staffNo, s.branchNo AS branch, COUNT(p.PropertyNo) AS numHousesManaged
+FROM staff s
+JOIN propertyForRent p ON s.staffNo = p.staffNo
+WHERE p.type = 'House' AND s.position = 'Manager'
+GROUP BY s.staffNo, s.branchNo;
+
+CREATE VIEW view_months AS
+SELECT v.*, p.*
+FROM viewing v
+JOIN propertyForRent p ON v.PropertyNo = p.PropertyNo
+WHERE v.viewDate > '2004-03-31' AND v.viewDate < '2004-06-01'
+AND p.branchNo = 'B003';
+
+
+
+
+
+g++ -c TestTheShapes.cpp
+g++ -c Area.cpp
+g++ -c CircleQuastion3.cpp
+g++ -c TriangleQuastion3.cpp
+g++ -c SquareQuastion3.cpp
+g++ -c TestTheShapes.cpp
+g++ -o TestShapes SquareQuastion3.o CircleQuastion3.o TriangleQuastion3.o TestTheShapes.o Area.o
